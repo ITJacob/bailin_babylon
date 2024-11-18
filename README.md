@@ -1,2 +1,2 @@
 # bailin_babylon
-3d game bailin, powed by babylon.js
+Bailin 3d game, powered by babylon.js
