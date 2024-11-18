@@ -46,6 +46,7 @@ async function start() {
     room = await global.client.createRoom({ maxPlayers: 2 }, props);
   }
 
+  alert(room.roomId);
   global.room = room;
   global.player = room.player; // 玩家自己
 
