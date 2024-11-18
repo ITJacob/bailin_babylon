@@ -8,10 +8,12 @@ let global = {
 // 测试用
 window.GOBE.Logger.level = window.GOBE.LogLevel.INFO;
 
+const [openId, roomId] = window.location.hash.replace('#', '').split('_');
+
 // 实例化Client对象
 global.client = new window.GOBE.Client({
   appId: "245150415728004841", // 应用ID，具体获取可参见准备游戏信息
-  openId: Date.now() + "", // 玩家ID，区别不同用户
+  openId, // 玩家ID，区别不同用户
   clientId: "1557244579667799872", // 客户端ID，具体获取可参见准备游戏信息
   clientSecret: "C017C61E129E83650D935387B6D1253107A36E197EAB668FCA7D89E5DF1D5B5A", // 客户端密钥，具体获取可参见准备游戏信息
   platform: { platform: GOBE.PlatformType.WEB }, // 平台类型（选填）
@@ -30,7 +32,7 @@ async function start() {
 
   // 2 获取房间列表
   // 查询房间列表成功
-  let { rooms } = await global.client.getAvailableRooms({ limit: 10 });
+  // let { rooms } = await global.client.getAvailableRooms({ limit: 10 });
 
   let room; // 房主信息
   const props = {
@@ -38,15 +40,15 @@ async function start() {
     customPlayerProperties: "",
   };
   // 3 加入房间
-  if (rooms && rooms.length > 0) {
+  if (roomId) {
     // 加入房间中
-    room = await global.client.joinRoom(rooms[0].roomId, props);
+    room = await global.client.joinRoom(roomId, props);    
   } else {
     // 没有房间，自己成为房主
     room = await global.client.createRoom({ maxPlayers: 2 }, props);
+    alert(room.roomId);
   }
 
-  alert(room.roomId);
   global.room = room;
   global.player = room.player; // 玩家自己
 
