@@ -62,13 +62,13 @@ async function start() {
     });
   }
 
-  return new Promise((res) => {
-    // 添加帧同步开始通知回调
-    global.room.onStartFrameSync(() => {
-      // 接收帧同步开始通知，处理游戏逻辑
-      res();
-    });
-  });
+  // return new Promise((res) => {
+  //   // 添加帧同步开始通知回调
+  //   global.room.onStartFrameSync(() => {
+  //     // 接收帧同步开始通知，处理游戏逻辑
+  //     res();
+  //   });
+  // });
 }
 
 let playerId = "";
