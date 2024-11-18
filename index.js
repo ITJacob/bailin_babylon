@@ -37,7 +37,7 @@ var createScene = function () {
   light.intensity = 0.7;
 
   // Our built-in 'ground' shape.
-  var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 260, height: 260 }, scene);
+  var ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 160, height: 160 }, scene);
   let groundMaterial = new BABYLON.StandardMaterial("Ground Material", scene);
   ground.material = groundMaterial;
   let groundTexture = new BABYLON.Texture(Assets.textures.checkerboard_basecolor_png.path, scene);
@@ -111,7 +111,7 @@ window.addEventListener("resize", function () {
       // 处理实时帧数据
       last = msg;
     }
-    if(!last.frameInfo) return;
+    if (!last.frameInfo) return;
 
     last.frameInfo.forEach(({ playerId, data }) => {
       const _data = JSON.parse(data[0]);
@@ -124,7 +124,13 @@ window.addEventListener("resize", function () {
     });
   });
 
-  const frameData = JSON.stringify({ x: 10, y: 4 });
+  let x = 10;
+  let y = 10;
   // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
-  global.room.sendFrame(frameData);
+  setInterval(() => {
+    x += 10;
+    y += 10;
+    const frameData = JSON.stringify({ x, y });
+    global.room.sendFrame(frameData);
+  }, 1000);
 })();
