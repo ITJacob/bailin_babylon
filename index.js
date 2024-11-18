@@ -97,9 +97,6 @@ window.addEventListener("resize", function () {
 
   await start();
   const players = {};
-  global.room.players.forEach(({ playerId }) => {
-    players.id = {playerId};
-  });
   // 添加接收帧同步信息回调
   global.room.onRecvFrame((msg) => {
     let last;
