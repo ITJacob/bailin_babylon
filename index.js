@@ -22,7 +22,7 @@ var createScene = function () {
     "camera",
     BABYLON.Tools.ToRadians(90),
     BABYLON.Tools.ToRadians(65),
-    10,
+    100,
     BABYLON.Vector3.Zero(),
     scene
   );
@@ -111,6 +111,7 @@ window.addEventListener("resize", function () {
       // 处理实时帧数据
       last = msg;
     }
+    if(!last.frameInfo) return;
 
     last.frameInfo.forEach(({ playerId, data }) => {
       const _data = JSON.parse(data[0]);
