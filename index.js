@@ -98,7 +98,7 @@ window.addEventListener("resize", function () {
   await start();
   const players = {};
   global.room.players.forEach(({ playerId }) => {
-    players.id = playerId;
+    players.id = {playerId};
   });
   // 添加接收帧同步信息回调
   global.room.onRecvFrame((msg) => {
@@ -115,6 +115,9 @@ window.addEventListener("resize", function () {
 
     last.frameInfo.forEach(({ playerId, data }) => {
       const _data = JSON.parse(data[0]);
+      if(!players[playerId]) {
+        players[playerId] = {playerId};
+      }
       const player = players[playerId];
       if (!player.box) {
         player.box = draw();
@@ -128,8 +131,8 @@ window.addEventListener("resize", function () {
   let y = 10;
   // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
   setInterval(() => {
-    x += 10;
-    y += 10;
+    x += 2;
+    y += 2;
     const frameData = JSON.stringify({ x, y });
     global.room.sendFrame(frameData);
   }, 1000);
