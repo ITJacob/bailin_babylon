@@ -92,10 +92,10 @@ var createScene = function () {
 };
 
 var draw = function (scene) {
-  var box = BABYLON.MeshBuilder.CreateBox("box", { size: 10 }, scene);
-  box.position.x = Math.random() * 100;
-  box.position.y = Math.random() * 100;
-  box.position.z = 5;
+  var box = BABYLON.MeshBuilder.CreateBox("box", { size: 8 }, scene);
+  // box.position.x = Math.random() * 100;
+  // box.position.y = Math.random() * 100;
+  box.position.y = 4;
 
   let boxMaterial = new BABYLON.StandardMaterial("Box Material", scene);
   boxMaterial.diffuseColor = new BABYLON.Color3(
@@ -134,27 +134,46 @@ window.addEventListener("resize", function () {
 });
 
 function startGameLoop() {
-  let x = 0;
-  let y = 0;
   const players = {};
+  const speed = 2; // 玩家移动速度
+  const input = { l: false, r: false, f: false, b: false };
+
+  scene.onKeyboardObservable.add((kbInfo) => {
+    const value = kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN;
+    switch (kbInfo.event.key) {
+      case "a":
+      case "A":
+        input.l = value;
+        break;
+      case "d":
+      case "D":
+        input.r = value;
+
+        break;
+      case "w":
+      case "W":
+        input.f = value;
+
+        break;
+      case "s":
+      case "S":
+        input.s = value;
+
+        break;
+    }
+  });
 
   global.room.onStartFrameSync(() => {
     // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
     setInterval(() => {
-      // if (Object.keys(players).length === 0) return;
-      x += 2;
-      y += 2;
-      const frameData = JSON.stringify({ x, y });
-      console.log("发送：", frameData);
+      const frameData = JSON.stringify(input);
       global.room.sendFrame(frameData);
-    }, 3000);
+    }, 100);
   });
 
   // 添加接收帧同步信息回调
   global.room.onRecvFrame((msg) => {
     let last;
-    console.log(msg);
-    
     // 处理帧数据msg
     if (Array.isArray(msg)) {
       // 处理补帧数据
@@ -165,15 +184,16 @@ function startGameLoop() {
     }
     if (!last.frameInfo) return;
 
-    last.frameInfo.forEach(({ playerId, data }) => {
+    last.frameInfo.forEach(({ playerId, data, timestamp }) => {
       const _data = JSON.parse(data[0]);
       if (!players[playerId]) {
-        players[playerId] = { playerId, box: draw(scene) };
+        players[playerId] = { playerId, box: draw(scene), timestamp };
       }
       const player = players[playerId];
-
-      player.box.position.x = _data.x;
-      player.box.position.y = _data.y;
+      const delt = (timestamp - player.timestamp) / 1000;
+      const { l, r, f, b } = _data;
+      player.box.position.x += (l ? 1 : r ? -1 : 0) * speed;
+      player.box.position.z += (f ? 1 : b ? -1 : 0) * speed;
     });
   });
 }
