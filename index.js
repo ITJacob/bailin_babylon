@@ -65,28 +65,23 @@ var createScene = function () {
   // groundMaterial.diffuseColor = BABYLON.Color3.Red();
   // ground.material.diffuseTexture = groundTexture;
 
-  BABYLON.SceneLoader.ImportMeshAsync(
-    null,
-    "public/ground/",
-    "scene.gltf",
-    scene
-  ).then((res) => {
-    let envMaterial = new BABYLON.StandardMaterial("Env Material", scene);
-    envMaterial.diffuseColor = BABYLON.Color3.Green();
+  BABYLON.appendSceneAsync("public/ground/scene.gltf", scene).then(
+    (res) => {
 
-    // console.log(meshes);
-    const env = res.meshes[0];
-    env.scaling.x = 30;
-    env.scaling.y = 5;
-    env.scaling.z = 30;
-    let allMeshes = env.getChildMeshes();
-    allMeshes.forEach((m) => {
-      m.layerMask = 1;
-      m.receiveShadows = true;
-      m.checkCollisions = true;
-      m.material = envMaterial;
-    });
-  });
+      console.log(res);
+      // const env = res.meshes[0];
+      // env.scaling.x = 30;
+      // env.scaling.y = 5;
+      // env.scaling.z = 30;
+      // let allMeshes = env.getChildMeshes();
+      // allMeshes.forEach((m) => {
+      //   m.layerMask = 1;
+      //   m.receiveShadows = true;
+      //   m.checkCollisions = true;
+      //   m.material = envMaterial;
+      // });
+    }
+  );
   // BABYLON.appendSceneAsync("public/ground/scene.gltf", scene).then((res) => {
   //   console.log(res);
 
