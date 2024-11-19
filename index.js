@@ -162,7 +162,7 @@ function startGameLoop(isOwner) {
     last.frameInfo.forEach(({ playerId, data }) => {
       const _data = JSON.parse(data[0]);
       if (!players[playerId]) {
-        players[playerId] = { playerId, box: draw(scene)};
+        players[playerId] = { playerId, box: draw(scene) };
       }
       const player = players[playerId];
 
@@ -171,13 +171,13 @@ function startGameLoop(isOwner) {
     });
   });
 
-  
   // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
   setInterval(() => {
     if (Object.keys(players) === 0) return;
     x += 2;
     y += 2;
     const frameData = JSON.stringify({ x, y });
+    console.log("发送：", frameData);
     global.room.sendFrame(frameData);
   }, 3000);
 }
@@ -186,7 +186,7 @@ function startGameLoop(isOwner) {
   await initFunction();
   sceneToRender = scene;
 
-  const { rooms, join } = await start();
+  const { rooms, join, create } = await start();
 
   if (rooms) {
     rooms.forEach(({ roomCode }, i) => {
@@ -206,8 +206,18 @@ function startGameLoop(isOwner) {
       });
       uiPanel.addControl(roomPanel);
     });
-  } else {
-    // 房主
-    startGameLoop(true);
   }
+
+  var createPanel = BABYLON.GUI.Button.CreateSimpleButton("but0", "new");
+  createPanel.height = "40px";
+  createPanel.color = "green";
+  createPanel.textHorizontalAlignment =
+    BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  createPanel.marginTop = "10px";
+  createPanel.onPointerClickObservable.add(function () {
+    create().then(() => {
+      startGameLoop(true);
+    });
+  });
+  uiPanel.addControl(createPanel);
 })();
