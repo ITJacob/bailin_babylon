@@ -39,22 +39,6 @@ async function start() {
     customPlayerStatus: 0,
     customPlayerProperties: "",
   };
-  
-  // 3 创建房间
-  if (!rooms || rooms.length === 0) {
-    const room = await global.client.createRoom({ maxPlayers: 2 }, props);
-    alert(room.roomId);
-    global.room = room;
-    global.player = room.player; // 玩家自己
-    global.room.onJoin((playerInfo) => {
-      // 判断是否非房主玩家加入房间
-      if (playerInfo.playerId !== global.room.ownerId) {
-        global.room.startFrameSync();
-        console.log('start frame!!!!!!!')
-      }
-    });
-    return {};
-  }
 
   return {
     rooms,
@@ -62,6 +46,19 @@ async function start() {
       const room = await global.client.joinRoom(roomCode, props);
       global.room = room;
       global.player = room.player; // 玩家自己
+    },
+    create: async () => {
+      const room = await global.client.createRoom({ maxPlayers: 2 }, props);
+      alert(room.roomCode);
+      global.room = room;
+      global.player = room.player; // 玩家自己
+      global.room.onJoin((playerInfo) => {
+        // 判断是否非房主玩家加入房间
+        if (playerInfo.playerId !== global.room.ownerId) {
+          global.room.startFrameSync();
+          console.log('start frame!!!!!!!')
+        }
+      });
     }
   }
 }
