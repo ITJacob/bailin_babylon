@@ -53,6 +53,7 @@ var createScene = function () {
     { width: 160, height: 160 },
     scene
   );
+  ground.layerMask = 1;
   let groundMaterial = new BABYLON.StandardMaterial("Ground Material", scene);
   ground.material = groundMaterial;
   let groundTexture = new BABYLON.Texture(
@@ -104,6 +105,7 @@ var draw = function (scene) {
   );
   box.material = boxMaterial;
   box.checkCollisions = true;
+  box.layerMask = 1;
 
   return box;
 };
