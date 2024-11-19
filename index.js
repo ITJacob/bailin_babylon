@@ -173,7 +173,7 @@ function startGameLoop(isOwner) {
 
   // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
   setInterval(() => {
-    if (Object.keys(players) === 0) return;
+    if (Object.keys(players).length === 0) return;
     x += 2;
     y += 2;
     const frameData = JSON.stringify({ x, y });
