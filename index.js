@@ -133,22 +133,28 @@ window.addEventListener("resize", function () {
   engine.resize();
 });
 
-function startGameLoop(isOwner) {
+function startGameLoop() {
   let x = 0;
   let y = 0;
   const players = {};
 
-  if (isOwner) {
-    global.room.onStartFrameSync(() => {
-      // 接收帧同步开始通知，处理游戏逻辑
+  global.room.onStartFrameSync(() => {
+    // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
+    setInterval(() => {
+      // if (Object.keys(players).length === 0) return;
+      x += 2;
+      y += 2;
       const frameData = JSON.stringify({ x, y });
+      console.log("发送：", frameData);
       global.room.sendFrame(frameData);
-    });
-  }
+    }, 3000);
+  });
 
   // 添加接收帧同步信息回调
   global.room.onRecvFrame((msg) => {
     let last;
+    console.log(msg);
+    
     // 处理帧数据msg
     if (Array.isArray(msg)) {
       // 处理补帧数据
@@ -170,16 +176,6 @@ function startGameLoop(isOwner) {
       player.box.position.y = _data.y;
     });
   });
-
-  // 发送帧数据，房间内玩家可通过该方法向联机对战服务端发送帧数据
-  setInterval(() => {
-    if (Object.keys(players).length === 0) return;
-    x += 2;
-    y += 2;
-    const frameData = JSON.stringify({ x, y });
-    console.log("发送：", frameData);
-    global.room.sendFrame(frameData);
-  }, 3000);
 }
 
 (async function main() {
@@ -216,7 +212,7 @@ function startGameLoop(isOwner) {
   createPanel.marginTop = "10px";
   createPanel.onPointerClickObservable.add(function () {
     create().then(() => {
-      startGameLoop(true);
+      startGameLoop();
     });
   });
   uiPanel.addControl(createPanel);
