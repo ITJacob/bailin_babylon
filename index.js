@@ -50,20 +50,47 @@ var createScene = function () {
   light.intensity = 0.7;
 
   // Our built-in 'ground' shape.
-  var ground = BABYLON.MeshBuilder.CreateGround(
-    "ground",
-    { width: 160, height: 160 },
+  // var ground = BABYLON.MeshBuilder.CreateGround(
+  //   "ground",
+  //   { width: 160, height: 160 },
+  //   scene
+  // );
+  // ground.layerMask = 1;
+  // let groundMaterial = new BABYLON.StandardMaterial("Ground Material", scene);
+  // ground.material = groundMaterial;
+  // let groundTexture = new BABYLON.Texture(
+  //   Assets.textures.checkerboard_basecolor_png.path,
+  //   scene
+  // );
+  // groundMaterial.diffuseColor = BABYLON.Color3.Red();
+  // ground.material.diffuseTexture = groundTexture;
+
+  BABYLON.SceneLoader.ImportMeshAsync(
+    null,
+    "public/ground/",
+    "scene.gltf",
     scene
-  );
-  ground.layerMask = 1;
-  let groundMaterial = new BABYLON.StandardMaterial("Ground Material", scene);
-  ground.material = groundMaterial;
-  let groundTexture = new BABYLON.Texture(
-    Assets.textures.checkerboard_basecolor_png.path,
-    scene
-  );
-  groundMaterial.diffuseColor = BABYLON.Color3.Red();
-  ground.material.diffuseTexture = groundTexture;
+  ).then((res) => {
+    let envMaterial = new BABYLON.StandardMaterial("Env Material", scene);
+    envMaterial.diffuseColor = BABYLON.Color3.Green();
+
+    // console.log(meshes);
+    const env = res.meshes[0];
+    env.scaling.x = 30;
+    env.scaling.y = 5;
+    env.scaling.z = 30;
+    let allMeshes = env.getChildMeshes();
+    allMeshes.forEach((m) => {
+      m.layerMask = 1;
+      m.receiveShadows = true;
+      m.checkCollisions = true;
+      m.material = envMaterial;
+    });
+  });
+  // BABYLON.appendSceneAsync("public/ground/scene.gltf", scene).then((res) => {
+  //   console.log(res);
+
+  // });
 
   // GUI
   labelTexture =
@@ -208,7 +235,11 @@ function startGameLoop() {
     last.frameInfo.forEach(({ playerId, data, timestamp }) => {
       const _data = JSON.parse(data[0]);
       if (!players[playerId]) {
-        players[playerId] = { playerId, box: draw(scene, playerId.substr(-5)), timestamp };
+        players[playerId] = {
+          playerId,
+          box: draw(scene, playerId.substr(-5)),
+          timestamp,
+        };
       }
       const player = players[playerId];
       const delt = (timestamp - player.timestamp) / 1000;
