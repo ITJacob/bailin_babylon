@@ -98,7 +98,7 @@ var createScene = function () {
   return scene;
 };
 
-var draw = function (scene) {
+var draw = function (scene, id) {
   var box = BABYLON.MeshBuilder.CreateBox("box", { size: 8 }, scene);
   box.position.y = 4;
 
@@ -122,11 +122,11 @@ var draw = function (scene) {
   labelTexture.addControl(rect1);
 
   var label = new BABYLON.GUI.TextBlock();
-  label.text = openId;
+  label.text = id;
   rect1.addControl(label);
 
   rect1.linkWithMesh(box);
-  rect1.linkOffsetY = -100;
+  rect1.linkOffsetY = -70;
 
   return box;
 };
@@ -208,12 +208,12 @@ function startGameLoop() {
     last.frameInfo.forEach(({ playerId, data, timestamp }) => {
       const _data = JSON.parse(data[0]);
       if (!players[playerId]) {
-        players[playerId] = { playerId, box: draw(scene), timestamp };
+        players[playerId] = { playerId, box: draw(scene, playerId.substr(-5)), timestamp };
       }
       const player = players[playerId];
       const delt = (timestamp - player.timestamp) / 1000;
       const { l, r, f, b } = _data;
-      player.box.position.x += (l ? 1 : r ? -1 : 0) * speed;
+      player.box.position.x += (l ? -1 : r ? 1 : 0) * speed; // x轴朝右
       player.box.position.z += (f ? 1 : b ? -1 : 0) * speed;
     });
   });
