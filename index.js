@@ -21,6 +21,8 @@ var createDefaultEngine = function () {
   });
 };
 
+let labelTexture = null;
+
 var createScene = function () {
   // This creates a basic Babylon Scene object (non-mesh)
   var scene = new BABYLON.Scene(engine);
@@ -63,6 +65,11 @@ var createScene = function () {
   groundMaterial.diffuseColor = BABYLON.Color3.Red();
   ground.material.diffuseTexture = groundTexture;
 
+  // GUI
+  labelTexture =
+    BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI for label");
+  labelTexture.layer.layerMask = 1;
+
   // add ui
   var camera2 = new BABYLON.ArcRotateCamera(
     "camera",
@@ -93,8 +100,6 @@ var createScene = function () {
 
 var draw = function (scene) {
   var box = BABYLON.MeshBuilder.CreateBox("box", { size: 8 }, scene);
-  // box.position.x = Math.random() * 100;
-  // box.position.y = Math.random() * 100;
   box.position.y = 4;
 
   let boxMaterial = new BABYLON.StandardMaterial("Box Material", scene);
@@ -106,6 +111,22 @@ var draw = function (scene) {
   box.material = boxMaterial;
   box.checkCollisions = true;
   box.layerMask = 1;
+
+  var rect1 = new BABYLON.GUI.Rectangle();
+  rect1.width = 0.2;
+  rect1.height = "4px";
+  rect1.cornerRadius = 2;
+  rect1.color = "Orange";
+  rect1.thickness = 0.4;
+  rect1.background = "green";
+  labelTexture.addControl(rect1);
+
+  var label = new BABYLON.GUI.TextBlock();
+  label.text = openId;
+  rect1.addControl(label);
+
+  rect1.linkWithMesh(box);
+  rect1.linkOffsetY = -5;
 
   return box;
 };
