@@ -27,7 +27,7 @@ var createScene = function () {
 
   var camera1 = new BABYLON.ArcRotateCamera(
     "camera",
-    BABYLON.Tools.ToRadians(90),
+    BABYLON.Tools.ToRadians(-90), // 沿着z轴正向看
     BABYLON.Tools.ToRadians(65),
     160,
     BABYLON.Vector3.Zero(),
@@ -66,7 +66,7 @@ var createScene = function () {
   // add ui
   var camera2 = new BABYLON.ArcRotateCamera(
     "camera",
-    BABYLON.Tools.ToRadians(90),
+    BABYLON.Tools.ToRadians(-90),
     BABYLON.Tools.ToRadians(65),
     160,
     BABYLON.Vector3.Zero(),
@@ -157,7 +157,7 @@ function startGameLoop() {
         break;
       case "s":
       case "S":
-        input.s = value;
+        input.b = value;
 
         break;
     }
