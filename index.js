@@ -113,11 +113,11 @@ var draw = function (scene) {
   box.layerMask = 1;
 
   var rect1 = new BABYLON.GUI.Rectangle();
-  rect1.width = 0.2;
-  rect1.height = "4px";
-  rect1.cornerRadius = 2;
+  rect1.width = "100px";
+  rect1.height = "40px";
+  rect1.cornerRadius = 12;
   rect1.color = "Orange";
-  rect1.thickness = 0.4;
+  rect1.thickness = 4;
   rect1.background = "green";
   labelTexture.addControl(rect1);
 
@@ -126,7 +126,7 @@ var draw = function (scene) {
   rect1.addControl(label);
 
   rect1.linkWithMesh(box);
-  rect1.linkOffsetY = -5;
+  rect1.linkOffsetY = -100;
 
   return box;
 };
