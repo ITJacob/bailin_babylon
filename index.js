@@ -127,8 +127,8 @@ var createScene = function () {
 };
 
 var draw = function (scene, id) {
-  var box = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
-  box.position.y = 2;
+  var box = BABYLON.MeshBuilder.CreateBox("box", { size: 0.2 }, scene);
+  box.position.y = 0.1;
 
   let boxMaterial = new BABYLON.StandardMaterial("Box Material", scene);
   boxMaterial.diffuseColor = new BABYLON.Color3(
