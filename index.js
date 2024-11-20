@@ -30,8 +30,8 @@ var createScene = function () {
   var camera1 = new BABYLON.ArcRotateCamera(
     "camera",
     BABYLON.Tools.ToRadians(-90), // 沿着z轴正向看
-    BABYLON.Tools.ToRadians(65),
-    160,
+    BABYLON.Tools.ToRadians(70),
+    6.1,
     BABYLON.Vector3.Zero(),
     scene
   );
@@ -42,33 +42,27 @@ var createScene = function () {
   // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
   var light = new BABYLON.HemisphericLight(
     "light",
-    new BABYLON.Vector3(0, 1, 0),
+    new BABYLON.Vector3(1, 1, 1),
     scene
   );
 
-  BABYLON.loadAssetContainerAsync("public/sky/skybox.glb", scene).then(
-    (res) => {
-      console.log(res);
-      //Skybox
-      const skybox = BABYLON.MeshBuilder.CreateBox(
-        "skyBox",
-        { size: 500 },
-        scene
-      );
-      const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
-      skyboxMaterial.backFaceCulling = false;
-      // skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
-      skyboxMaterial.reflectionTexture = res.textures[0];
-      skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-      skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-      skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-      skybox.material = skyboxMaterial;
-      skybox.layerMask = 1;
-    }
-  );
-
   // Default intensity is 1. Let's dim the light a small amount
-  // light.intensity = 0.7;
+  light.intensity = 1;
+
+  // const skybox = BABYLON.MeshBuilder.CreateBox(
+  //   "skyBox",
+  //   { size: 5000 },
+  //   scene
+  // );
+  // const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+  // skyboxMaterial.backFaceCulling = false;
+  // skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("public/sky/skybox.dds", scene);
+  // // skyboxMaterial.reflectionTexture = res.textures[0];
+  // skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+  // skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+  // skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+  // skybox.material = skyboxMaterial;
+  // skybox.layerMask = 1;
 
   // Our built-in 'ground' shape.
   // var ground = BABYLON.MeshBuilder.CreateGround(
@@ -88,26 +82,16 @@ var createScene = function () {
 
   BABYLON.loadAssetContainerAsync("public/ground/scene.gltf", scene).then(
     (res) => {
-      console.log(res);
       const env = res.meshes[0];
-      env.scaling.x = 30;
-      env.scaling.y = 2;
-      env.scaling.z = 30;
       let allMeshes = env.getChildMeshes();
-      // groundMaterial.diffuseColor = allMeshes[0].material.albedoColor;
       allMeshes.forEach((m) => {
         m.layerMask = 1;
         m.receiveShadows = true;
         m.checkCollisions = true;
-        // m.material = groundMaterial;
       });
       res.addAllToScene();
     }
   );
-  // BABYLON.appendSceneAsync("public/ground/scene.gltf", scene).then((res) => {
-  //   console.log(res);
-
-  // });
 
   // GUI
   labelTexture =
