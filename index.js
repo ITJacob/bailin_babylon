@@ -103,7 +103,7 @@ var createScene = function () {
     "camera",
     BABYLON.Tools.ToRadians(-90),
     BABYLON.Tools.ToRadians(65),
-    160,
+    10,
     BABYLON.Vector3.Zero(),
     scene
   );
@@ -127,8 +127,8 @@ var createScene = function () {
 };
 
 var draw = function (scene, id) {
-  var box = BABYLON.MeshBuilder.CreateBox("box", { size: 8 }, scene);
-  box.position.y = 4;
+  var box = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
+  box.position.y = 2;
 
   let boxMaterial = new BABYLON.StandardMaterial("Box Material", scene);
   boxMaterial.diffuseColor = new BABYLON.Color3(
@@ -184,7 +184,7 @@ window.addEventListener("resize", function () {
 
 function startGameLoop() {
   const players = {};
-  const speed = 2; // 玩家移动速度
+  const speed = 0.2; // 玩家移动速度
   const input = { l: false, r: false, f: false, b: false };
 
   scene.onKeyboardObservable.add((kbInfo) => {
