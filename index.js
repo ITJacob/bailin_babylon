@@ -46,8 +46,29 @@ var createScene = function () {
     scene
   );
 
+  BABYLON.loadAssetContainerAsync("public/sky/skybox.glb", scene).then(
+    (res) => {
+      console.log(res);
+      //Skybox
+      const skybox = BABYLON.MeshBuilder.CreateBox(
+        "skyBox",
+        { size: 500 },
+        scene
+      );
+      const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+      skyboxMaterial.backFaceCulling = false;
+      // skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", scene);
+      skyboxMaterial.reflectionTexture = res.textures[0];
+      skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+      skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+      skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+      skybox.material = skyboxMaterial;
+      skybox.layerMask = 1;
+    }
+  );
+
   // Default intensity is 1. Let's dim the light a small amount
-  light.intensity = 0.7;
+  // light.intensity = 0.7;
 
   // Our built-in 'ground' shape.
   // var ground = BABYLON.MeshBuilder.CreateGround(
@@ -65,21 +86,22 @@ var createScene = function () {
   // groundMaterial.diffuseColor = BABYLON.Color3.Red();
   // ground.material.diffuseTexture = groundTexture;
 
-  BABYLON.appendSceneAsync("public/ground/scene.gltf", scene).then(
+  BABYLON.loadAssetContainerAsync("public/ground/scene.gltf", scene).then(
     (res) => {
-
       console.log(res);
-      // const env = res.meshes[0];
-      // env.scaling.x = 30;
-      // env.scaling.y = 5;
-      // env.scaling.z = 30;
-      // let allMeshes = env.getChildMeshes();
-      // allMeshes.forEach((m) => {
-      //   m.layerMask = 1;
-      //   m.receiveShadows = true;
-      //   m.checkCollisions = true;
-      //   m.material = envMaterial;
-      // });
+      const env = res.meshes[0];
+      env.scaling.x = 30;
+      env.scaling.y = 2;
+      env.scaling.z = 30;
+      let allMeshes = env.getChildMeshes();
+      // groundMaterial.diffuseColor = allMeshes[0].material.albedoColor;
+      allMeshes.forEach((m) => {
+        m.layerMask = 1;
+        m.receiveShadows = true;
+        m.checkCollisions = true;
+        // m.material = groundMaterial;
+      });
+      res.addAllToScene();
     }
   );
   // BABYLON.appendSceneAsync("public/ground/scene.gltf", scene).then((res) => {
